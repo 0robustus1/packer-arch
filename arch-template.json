@@ -30,5 +30,14 @@
       "shutdown_command": "systemctl start poweroff.timer"
     }
   ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "pacman -Sy",
+        "pacman -S --noconfirm puppet"
+      ]
+    }
+  ],
   "post-processors": [ ]
 }
