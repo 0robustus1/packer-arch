@@ -23,14 +23,9 @@
       "disk_size": 20480,
       "hard_drive_interface": "sata",
       "ssh_username": "root",
-      "ssh_password": "vagrant",
+      "ssh_password": "arch-instance",
       "shutdown_command": "systemctl start poweroff.timer"
     }
   ],
-  "post-processors": [
-    {
-      "type": "vagrant",
-      "output": "packer_arch_{{.Provider}}.box"
-    }
-  ]
+  "post-processors": [ ]
 }

@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+USER='robustus'
+GROUP='robustal'
+PASSWORD=$(/usr/bin/openssl passwd -crypt 'arch-instance')
+
 DISK='/dev/sda'
-FQDN='vagrant-arch.vagrantup.com'
+FQDN='arch-instance.rightsrestricted.com'
 KEYMAP='us'
 LANGUAGE='en_US.UTF-8'
-PASSWORD=$(/usr/bin/openssl passwd -crypt 'vagrant')
 TIMEZONE='UTC'
 
 CONFIG_SCRIPT='/usr/local/bin/arch-config.sh'
@@ -67,16 +70,16 @@ cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
 	/usr/bin/systemctl enable vboxservice.service
 	/usr/bin/systemctl enable rpcbind.service
 
-	# Vagrant-specific configuration
-	/usr/bin/groupadd vagrant
-	/usr/bin/useradd --password ${PASSWORD} --comment 'Vagrant User' --create-home --gid users --groups vagrant,vboxsf vagrant
-	echo 'Defaults env_keep += "SSH_AUTH_SOCK"' > /etc/sudoers.d/10_vagrant
-	echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/10_vagrant
-	/usr/bin/chmod 0440 /etc/sudoers.d/10_vagrant
-	/usr/bin/install --directory --owner=vagrant --group=users --mode=0700 /home/vagrant/.ssh
-	/usr/bin/curl --output /home/vagrant/.ssh/authorized_keys --location https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
-	/usr/bin/chown vagrant:users /home/vagrant/.ssh/authorized_keys
-	/usr/bin/chmod 0600 /home/vagrant/.ssh/authorized_keys
+	# User-specific configuration
+	/usr/bin/groupadd ${GROUP}
+	/usr/bin/useradd --password ${PASSWORD} --comment '${USER} User' --create-home --gid users --groups ${GROUP},vboxsf ${USER}
+	echo 'Defaults env_keep += "SSH_AUTH_SOCK"' > /etc/sudoers.d/10_${GROUP}
+	echo '${GROUP} ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/10_${GROUP}
+	/usr/bin/chmod 0440 /etc/sudoers.d/10_${GROUP}
+	/usr/bin/install --directory --owner=${USER} --group=users --mode=0700 /home/${USER}/.ssh
+	# /usr/bin/curl --output /home/${USER}/.ssh/authorized_keys --location https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
+	/usr/bin/chown ${USER}:users /home/${USER}/.ssh/authorized_keys
+	/usr/bin/chmod 0600 /home/${USER}/.ssh/authorized_keys
 
 	# clean up
 	/usr/bin/pacman -Rcns --noconfirm gptfdisk
