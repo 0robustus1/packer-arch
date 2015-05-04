@@ -12,6 +12,10 @@
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "guest_os_type": "ArchLinux_64",
       "guest_additions_mode": "disable",
+      "disk_size": 20480,
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "2048"]
+      ],
       "http_directory": ".",
       "boot_wait": "5s",
       "boot_command": [
@@ -20,7 +24,6 @@
         "/usr/bin/curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/poweroff.timer<enter><wait5>",
         "/usr/bin/bash ./install-virtualbox.sh<enter>"
       ],
-      "disk_size": 20480,
       "hard_drive_interface": "sata",
       "ssh_username": "root",
       "ssh_password": "arch-instance",
