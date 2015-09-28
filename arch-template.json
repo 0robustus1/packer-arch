@@ -19,11 +19,12 @@
       "http_directory": ".",
       "boot_wait": "5s",
       "boot_command": [
-        "<enter><wait10><wait10>",
+        "<enter><wait10><wait10><wait10>",
         "/usr/bin/curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/install-virtualbox.sh<enter><wait5>",
         "/usr/bin/curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/poweroff.timer<enter><wait5>",
         "/usr/bin/bash ./install-virtualbox.sh<enter>"
       ],
+      "ssh_wait_timeout": "25m",
       "hard_drive_interface": "sata",
       "ssh_username": "root",
       "ssh_password": "arch-instance",
@@ -37,6 +38,13 @@
         "pacman -Sy",
         "pacman -S --noconfirm puppet"
       ]
+    },
+    {
+      "type": "puppet-masterless",
+      "manifest_file": "puppet/site.pp",
+      "module_paths": "puppet/modules",
+      "manifest_dir": "puppet/manifests",
+      "prevent_sudo": true
     }
   ],
   "post-processors": [ ]
